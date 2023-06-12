@@ -28,9 +28,13 @@ export class VehiclesInMemoryRepository implements VehiclesRepository {
     return newVehicle;
   }
 
-  findAll(): Vehicle[] | Promise<Vehicle[]> {
-    return this.database;
+  async findAll(): Promise<Vehicle[]> {
+    return Promise.all(this.database.map(async (vehicle) => {
+      const galleryImages = await Promise.all(vehicle.gallery_id.map((galleryId) => this.galleryRepository.findOne(galleryId)));
+      return { ...vehicle, galleryImages };
+    }));
   }
+  
 
   findOne(id: string): Vehicle | Promise<Vehicle> {
     const vehicle = this.database.find((vehicle) => vehicle.id === id);
@@ -40,26 +44,42 @@ export class VehiclesInMemoryRepository implements VehiclesRepository {
     return vehicle;
   }
 
-  update(id: string, data: UpdateVehicleDto): Vehicle | Promise<Vehicle> {
-    const vehicleIndex = this.database.findIndex(
-      (vehicle) => vehicle.id === id,
-    );
+  async update(id: string, data: UpdateVehicleDto): Promise<Vehicle> {
+    const vehicleIndex = this.database.findIndex((vehicle) => vehicle.id === id);
     if (vehicleIndex === -1) {
       throw new Error('The requested vehicle does not exist');
     }
+
+    const newGalleryIds = data.galleryImages
+      ? await Promise.all(
+          data.galleryImages.map(async (imageUrl) => {
+            const newGallery = await this.galleryRepository.create({
+              img_url: imageUrl,
+            });
+            return newGallery.id;
+          }),
+        )
+      : [];
+
     const updatedVehicle = new Vehicle();
-    Object.assign(updatedVehicle, { ...data });
+    Object.assign(updatedVehicle, this.database[vehicleIndex], data, {
+      gallery_id: newGalleryIds,
+    });
+
     this.database[vehicleIndex] = updatedVehicle;
     return updatedVehicle;
   }
 
-  delete(id: string): void | Promise<void> {
-    const vehicleIndex = this.database.findIndex(
-      (vehicle) => vehicle.id === id,
-    );
-    if (vehicleIndex === -1) {
-      throw new Error('The requested vehicle does not exist');
-    }
-    this.database.splice(vehicleIndex, 1);
-  }
+
+  delete(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        const vehicleIndex = this.database.findIndex((vehicle) => vehicle.id === id);
+        if (vehicleIndex === -1) {
+            reject(new Error('The requested vehicle does not exist'));
+        }
+        this.database.splice(vehicleIndex, 1);
+        resolve();
+    });
+}
+
 }
