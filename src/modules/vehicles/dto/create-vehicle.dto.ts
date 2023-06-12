@@ -1,51 +1,56 @@
-import { IsDecimal, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator"
-import { Url } from "url";
+import { Type } from 'class-transformer';
+import {
+  IsDecimal,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { Url } from 'url';
 
 export class CreateVehicleDto {
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(50)
-    brand: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  brand: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(50)
-    model: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  model: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(4)
-    year: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(4)
+  year: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(7)
-    km: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(7)
+  km: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(20)
-    color: string;
-    
-    @IsNumber()
-    @IsDecimal()
-    @IsNotEmpty()
-    fipe_price: number;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(20)
+  color: string;
 
-    @IsNumber()
-    @IsDecimal()
-    @IsNotEmpty()
-    price: number;
+  @IsNotEmpty()
+  @IsNumber()
+  fipe_price: number;
 
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(9999)
-    description: string;
+  @IsNotEmpty()
+  @IsNumber()
+  price: number;
 
-    @IsString()
-    @IsNotEmpty()
-    cover_img: Url
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(9999)
+  description: string;
 
-    @IsString()
-    gallery_id: string
+  @IsString()
+  @IsNotEmpty()
+  cover_img: Url;
+
+  @IsString()
+  gallery_id: string;
 }

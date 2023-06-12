@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,4 +16,28 @@ model User {
   phone String
   birth_date DateTime
   description String?
+  vehicles Vehicles[]
+}
+
+model Vehicles{
+  id String @id
+  brand String
+  model String
+  year String
+  km String
+  color String
+  fipe_price Int
+  price Int
+  description String
+  cover_img String
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  gallery Gallery[]
+}
+
+model Gallery{
+  id String @id
+  image_url String
+  vehicleId String
+  vehicle Vehicles @relation(fields: [vehicleId], references: [id])
 }
