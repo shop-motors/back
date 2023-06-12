@@ -3,16 +3,27 @@ import { VehiclesRepository } from '../vehicles.repository';
 import { CreateVehicleDto } from '../../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../../dto/update-vehicle.dto';
 import { Vehicle } from '../../entities/vehicle.entity';
+import { GalleryRepository } from '../../../gallery/repositories/gallery.repository';
+import { CreateGalleryDto } from '../../../gallery/dto/create-gallery.dto';
 
 @Injectable()
 export class VehiclesInMemoryRepository implements VehiclesRepository {
   private database: Vehicle[] = [];
+  constructor(private galleryRepository: GalleryRepository) {}
 
-  create(data: CreateVehicleDto): Vehicle | Promise<Vehicle> {
+  async create(data: CreateVehicleDto): Promise<Vehicle> {
     const newVehicle = new Vehicle();
     Object.assign(newVehicle, {
       ...data,
     });
+    const galleryItems = await Promise.all(
+      data.galleryImages.map(async (image) => {
+        const newGalleryItem: CreateGalleryDto = { img_url: image };
+        return this.galleryRepository.create(newGalleryItem);
+      }),
+    );
+    newVehicle.gallery_id = galleryItems.map((item) => item.id);
+
     this.database.push(newVehicle);
     return newVehicle;
   }

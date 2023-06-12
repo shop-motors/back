@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsDecimal,
+  IsArray,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -51,6 +51,8 @@ export class CreateVehicleDto {
   @IsNotEmpty()
   cover_img: Url;
 
-  @IsString()
-  gallery_id: string;
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty()
+  galleryImages: string[];
 }

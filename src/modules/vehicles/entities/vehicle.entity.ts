@@ -12,7 +12,7 @@ export class Vehicle {
   price: number;
   description: string;
   cover_img: Url;
-  gallery_id: string;
+  gallery_id: string[];
 
   constructor() {
     this.id = randomUUID();

@@ -11,6 +11,7 @@ import { GalleryInMemoryRepository } from './repositories/in-memory/gallery.in-m
       provide: GalleryRepository,
       useClass: GalleryInMemoryRepository,
     }
-  ]
+  ],
+  exports: [GalleryRepository]
 })
 export class GalleryModule {}
