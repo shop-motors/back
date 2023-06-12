@@ -81,5 +81,4 @@ export class VehiclesInMemoryRepository implements VehiclesRepository {
         resolve();
     });
 }
-
 }
