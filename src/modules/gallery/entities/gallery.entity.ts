@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Url } from "url";
 import { randomUUID } from 'crypto';
 
