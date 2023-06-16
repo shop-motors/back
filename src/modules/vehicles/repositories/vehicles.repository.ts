@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { Vehicle } from '../entities/vehicle.entity';

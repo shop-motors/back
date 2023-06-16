@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { CreateGalleryDto } from './dto/create-gallery.dto';
 import { GalleryRepository } from './repositories/gallery.repository';

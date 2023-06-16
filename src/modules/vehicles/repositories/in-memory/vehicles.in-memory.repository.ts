@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { VehiclesRepository } from '../vehicles.repository';
 import { CreateVehicleDto } from '../../dto/create-vehicle.dto';
