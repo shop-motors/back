@@ -14,9 +14,11 @@ model User {
   password String
   cpf String @unique
   phone String
-  birth_date DateTime
+  birth_date String
   description String?
   vehicles Vehicles[]
+
+  @@map("users")
 }
 
 model Vehicles{
@@ -33,6 +35,8 @@ model Vehicles{
   userId String
   user User @relation(fields: [userId], references: [id])
   gallery Gallery[]
+
+  @@map("vehicles")
 }
 
 model Gallery{
@@ -40,4 +44,6 @@ model Gallery{
   image_url String
   vehicleId String
   vehicle Vehicles @relation(fields: [vehicleId], references: [id])
+
+  @@map("gallery")
 }
