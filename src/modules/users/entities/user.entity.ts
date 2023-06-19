@@ -11,7 +11,7 @@ export class User {
 
   cpf: string;
   phone: string;
-  birth_date: number;
+  birth_date: string;
   description: string;
 
   constructor() {
