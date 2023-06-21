@@ -4,7 +4,8 @@ import { PrismaService } from '../../../../database/prisma.services';
 import { GalleryRepository } from '../../../gallery/repositories/gallery.repository';
 import { CreateVehicleDto } from '../../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../../dto/update-vehicle.dto';
-import { Vehicles } from '@prisma/client';
+import { Vehicle } from '../../entities/vehicle.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PrismaVehiclesRepository implements VehiclesRepository {
@@ -13,8 +14,7 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
     private galleryRepository: GalleryRepository
   ) {}
 
-  async create(data: CreateVehicleDto, userId: string): Promise<Vehicles> {
-
+  async create(data: CreateVehicleDto, userId: string): Promise<Vehicle> {
     const vehicle = await this.prisma.vehicles.create({
       data: {
         brand: data.brand,
@@ -31,11 +31,20 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
         },
       },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            cpf: true,
+            phone: true,
+            birth_date: true,
+            description: true,
+          },
+        },
       },
     });
   
-    
     const galleryItems = await Promise.all(
       data.galleryImages.map((imageUrl) => 
         this.galleryRepository.create({ img_url: imageUrl, vehicleId: vehicle.id })
@@ -47,22 +56,33 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
         id: vehicle.id,
       },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            cpf: true,
+            phone: true,
+            birth_date: true,
+            description: true,
+          },
+        },
         gallery: true,
       },
     });
   
-    return fullVehicle;
+    return plainToInstance(Vehicle, fullVehicle);
   }
   
+  
 
-    findAll(): Vehicles[] | Promise<Vehicles[]> {
+  async findAll(): Promise<Vehicle[]> {
+    throw new Error('Method not implemented.')
+  }
+    findOne(id: string): Promise<Vehicle> {
         throw new Error('Method not implemented.');
     }
-    findOne(id: string): Promise<Vehicles> {
-        throw new Error('Method not implemented.');
-    }
-    update(id: string, data: UpdateVehicleDto): Promise<Vehicles> {
+    update(id: string, data: UpdateVehicleDto): Promise<Vehicle> {
         throw new Error('Method not implemented.');
     }
     delete(id: string): void | Promise<void> {

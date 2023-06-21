@@ -3,12 +3,12 @@
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { Vehicle } from '../entities/vehicle.entity';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
-import { Vehicles } from '@prisma/client';
+
 
 export abstract class VehiclesRepository {
-  abstract create(data: CreateVehicleDto, userId: string): Promise<Vehicles> | Vehicle;
-  abstract findAll(): Promise<Vehicles[]> | Vehicles[];
-  abstract findOne(id: string): Promise<Vehicles> | Vehicles;
-  abstract update(id: string, data: UpdateVehicleDto): Promise<Vehicles> | Vehicles;
+  abstract create(data: CreateVehicleDto, userId: string): Promise<Vehicle> | Vehicle;
+  abstract findAll(): Promise<Vehicle[]> | Vehicle[];
+  abstract findOne(id: string): Promise<Vehicle> | Vehicle;
+  abstract update(id: string, data: UpdateVehicleDto): Promise<Vehicle> | Vehicle;
   abstract delete(id: string): Promise<void> | void;
 }
