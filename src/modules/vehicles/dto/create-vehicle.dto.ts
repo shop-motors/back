@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Type } from 'class-transformer';
+
 import {
   IsArray,
   IsNotEmpty,
@@ -7,7 +7,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { Url } from 'url';
+
 
 export class CreateVehicleDto {
   @IsString()
@@ -50,7 +50,7 @@ export class CreateVehicleDto {
 
   @IsString()
   @IsNotEmpty()
-  cover_img: Url;
+  cover_img: string;
 
   @IsArray()
   @IsString({ each: true })
