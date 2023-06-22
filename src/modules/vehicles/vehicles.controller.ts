@@ -17,13 +17,12 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('vehicles')
 @Controller('vehicles')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   @Post('')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard) 
   create(@Body() createVehicleDto: CreateVehicleDto, @Request() req) {
     return this.vehiclesService.create(createVehicleDto, req.user.id);
   }
@@ -35,26 +34,22 @@ export class VehiclesController {
     required: false,
     description: "Informe vehicles, trazer um item agrupado"
   })
-  findAll(userId: string) {
-    return this.vehiclesService.findAll(userId);
+  findAll(@Request() req) {
+    return this.vehiclesService.findAll(req.user.id);
   }
 
   @Get(':id')
-  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.vehiclesService.findOne(id);
   }
 
   @Patch(':id')
-  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
     return this.vehiclesService.update(id, updateVehicleDto);
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.vehiclesService.remove(id);
   }
 }
-
