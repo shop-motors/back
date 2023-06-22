@@ -76,9 +76,27 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
   
   
 
-  async findAll(): Promise<Vehicle[]> {
-    throw new Error('Method not implemented.')
-  }
+  async findAll(userId: string): Promise<Vehicle[]> {
+    const vehicles = await this.prisma.vehicles.findMany({
+        where: { userId: userId },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    cpf: true,
+                    phone: true,
+                    birth_date: true,
+                    description: true,
+                }
+            },
+            gallery: true,
+        },
+    });
+    return vehicles.map(vehicle => plainToInstance(Vehicle, vehicle));
+}
+
     findOne(id: string): Promise<Vehicle> {
         throw new Error('Method not implemented.');
     }

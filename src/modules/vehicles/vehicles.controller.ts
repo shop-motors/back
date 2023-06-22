@@ -15,8 +15,8 @@ export class VehiclesController {
   }
 
   @Get()
-  findAll() {
-    return this.vehiclesService.findAll();
+  findAll(userId: string) {
+    return this.vehiclesService.findAll(userId);
   }
 
   @Get(':id')
