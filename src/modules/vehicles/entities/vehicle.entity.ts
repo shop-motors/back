@@ -13,9 +13,9 @@ export class Vehicle {
   fipe_price: number;
   price: number;
   description: string;
-  cover_img: string; // if cover_img is a URL, you can use Url type, otherwise use string
+  cover_img: string; 
   user: User;
-  gallery: Gallery[]; // an array of Gallery entities
+  gallery: Gallery[]; 
 
   constructor() {
     this.id = randomUUID();

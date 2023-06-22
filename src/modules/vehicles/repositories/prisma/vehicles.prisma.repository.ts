@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { VehiclesRepository } from '../vehicles.repository';
 import { PrismaService } from '../../../../database/prisma.services';
 import { GalleryRepository } from '../../../gallery/repositories/gallery.repository';
@@ -13,6 +13,7 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
     private prisma: PrismaService,
     private galleryRepository: GalleryRepository
   ) {}
+
 
   async create(data: CreateVehicleDto, userId: string): Promise<Vehicle> {
     const vehicle = await this.prisma.vehicles.create({
@@ -96,14 +97,81 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
     });
     return vehicles.map(vehicle => plainToInstance(Vehicle, vehicle));
 }
+async findOne(id: string): Promise<Vehicle> {
+  const vehicle = await this.prisma.vehicles.findUnique({
+    where: { id: id },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          cpf: true,
+          phone: true,
+          birth_date: true,
+          description: true,
+        },
+      },
+      gallery: true,
+    },
+  });
+  if (!vehicle) {
+    throw new NotFoundException(`Vehicle with ID ${id} not found`);
+  }
+  return plainToInstance(Vehicle, vehicle);
+}
 
-    findOne(id: string): Promise<Vehicle> {
-        throw new Error('Method not implemented.');
-    }
-    update(id: string, data: UpdateVehicleDto): Promise<Vehicle> {
-        throw new Error('Method not implemented.');
-    }
-    delete(id: string): void | Promise<void> {
-        throw new Error('Method not implemented.');
-    }
+// async update(id: string, data: UpdateVehicleDto): Promise<Vehicle> {
+  // const existingVehicle = await this.prisma.vehicles.findUnique({ where: { id } });
+
+  // if (!existingVehicle) {
+  //   throw new NotFoundException(`Vehicle with id ${id} not found`);
+  // }
+  // const updatedVehicle = await this.prisma.vehicles.update({
+  //   where: { id },
+  //   data: {
+  //     ...data,
+  //     gallery: {
+  //       create: data.galleryImages
+  //         ? data.galleryImages.map((imageUrl) => ({ image_url: imageUrl }))
+  //         : undefined,
+  //     },
+  //   },
+  //   include: {
+  //     user: {
+  //       select: {
+  //         id: true,
+  //         name: true,
+  //         email: true,
+  //         cpf: true,
+  //         phone: true,
+  //         birth_date: true,
+  //         description: true,
+  //       },
+  //     },
+  //     gallery: true,
+  //   },
+  // });
+
+//   return throw new Error('not implemented')
+// }
+
+update(id: string, data: UpdateVehicleDto): Vehicle | Promise<Vehicle> {
+  throw new Error('Method not implemented.');
+}
+
+async delete(id: string): Promise<void> {
+  const vehicle = await this.prisma.vehicles.findUnique({
+    where: { id: id },
+  });
+
+  if (!vehicle) {
+    throw new NotFoundException(`Vehicle with ID ${id} not found`);
+  }
+
+  await this.prisma.vehicles.delete({
+    where: { id: id },
+  });
+}
+
 }
