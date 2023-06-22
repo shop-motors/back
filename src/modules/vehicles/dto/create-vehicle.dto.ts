@@ -7,7 +7,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { Url } from 'url';
+
 
 export class CreateVehicleDto {
   @ApiProperty()
@@ -59,7 +59,7 @@ export class CreateVehicleDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  cover_img: Url;
+  cover_img: string;
 
   @ApiProperty()
   @IsArray()

@@ -6,14 +6,14 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
-  UseGuards,
+  Delete, Request, UseGuards,
 } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
 
 @ApiTags('vehicles')
 @Controller('vehicles')
@@ -23,8 +23,9 @@ export class VehiclesController {
   @Post('')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  create(@Body() createVehicleDto: CreateVehicleDto) {
-    return this.vehiclesService.create(createVehicleDto);
+  @UseGuards(JwtAuthGuard) 
+  create(@Body() createVehicleDto: CreateVehicleDto, @Request() req) {
+    return this.vehiclesService.create(createVehicleDto, req.user.id);
   }
 
   @Get('')
@@ -34,8 +35,8 @@ export class VehiclesController {
     required: false,
     description: "Informe vehicles, trazer um item agrupado"
   })
-  findAll() {
-    return this.vehiclesService.findAll();
+  findAll(userId: string) {
+    return this.vehiclesService.findAll(userId);
   }
 
   @Get(':id')
@@ -56,3 +57,4 @@ export class VehiclesController {
     return this.vehiclesService.remove(id);
   }
 }
+
