@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 
 
-export class CreateVehicleDto {
+export class VehicleBaseDto  {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -66,4 +66,8 @@ export class CreateVehicleDto {
   @IsString({ each: true })
   @IsNotEmpty()
   galleryImages: string[];
+}
+
+export class CreateVehicleDto extends VehicleBaseDto {
+ 
 }

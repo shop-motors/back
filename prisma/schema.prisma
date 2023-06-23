@@ -43,7 +43,7 @@ model Gallery{
   id String @id
   image_url String
   vehicleId String
-  vehicle Vehicles @relation(fields: [vehicleId], references: [id])
+  vehicle Vehicles @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   @@map("gallery")
 }
