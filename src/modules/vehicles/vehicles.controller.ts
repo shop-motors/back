@@ -33,7 +33,7 @@ export class VehiclesController {
     description: "Informe vehicles, trazer um item agrupado"
   })
   findAll(@Request() req) {
-    return this.vehiclesService.findAll(req.user.id);
+    return this.vehiclesService.findAll();
   }
 
   @Get(':id')

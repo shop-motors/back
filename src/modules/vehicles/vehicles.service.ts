@@ -12,8 +12,8 @@ export class VehiclesService {
     return vehicle
   }
 
-  async findAll(userId: string) {
-    const vehicle = await this.vehicleRepository.findAll(userId)
+  async findAll() {
+    const vehicle = await this.vehicleRepository.findAll()
     return vehicle
   }
 
