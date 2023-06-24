@@ -202,7 +202,6 @@ async delete(id: string): Promise<void> {
   await this.prisma.vehicles.delete({
     where: { id: id },
   });
-  
 }
 
 }
