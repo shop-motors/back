@@ -78,9 +78,8 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
   
   
 
-  async findAll(userId: string): Promise<Vehicle[]> {
+  async findAll(): Promise<Vehicle[]> {
     const vehicles = await this.prisma.vehicles.findMany({
-        where: { userId: userId },
         include: {
             user: {
                 select: {
@@ -202,7 +201,6 @@ async delete(id: string): Promise<void> {
   await this.prisma.vehicles.delete({
     where: { id: id },
   });
-  
 }
 
 }
