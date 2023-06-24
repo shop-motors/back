@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { VehiclesRepository } from '../vehicles.repository';
 import { PrismaService } from '../../../../database/prisma.services';
 import { GalleryRepository } from '../../../gallery/repositories/gallery.repository';
@@ -7,6 +7,7 @@ import { UpdateVehicleDto } from '../../dto/update-vehicle.dto';
 import { Vehicle } from '../../entities/vehicle.entity';
 import { plainToInstance } from 'class-transformer';
 import { randomUUID } from 'crypto';
+
 
 @Injectable()
 export class PrismaVehiclesRepository implements VehiclesRepository {
@@ -76,27 +77,35 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
     return plainToInstance(Vehicle, fullVehicle);
   }
   
-  
-
-  async findAll(): Promise<Vehicle[]> {
+  async findAll(page = 0, limit = 12): Promise<{page: number, limit: number, total: number, data: Vehicle[]}> {
+    const total = await this.prisma.vehicles.count();
     const vehicles = await this.prisma.vehicles.findMany({
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    cpf: true,
-                    phone: true,
-                    birth_date: true,
-                    description: true,
-                }
-            },
-            gallery: true,
+      skip: page * limit,
+      take: limit,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            cpf: true,
+            phone: true,
+            birth_date: true,
+            description: true,
+          }
         },
+        gallery: true,
+      },
     });
-    return vehicles.map(vehicle => plainToInstance(Vehicle, vehicle));
-}
+    return {
+      page,
+      limit,
+      total,
+      data: vehicles.map(vehicle => plainToInstance(Vehicle, vehicle))
+    };
+  }
+
+
 async findOne(id: string): Promise<Vehicle> {
   const vehicle = await this.prisma.vehicles.findUnique({
     where: { id: id },

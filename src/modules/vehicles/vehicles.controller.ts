@@ -12,7 +12,7 @@ import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-
+import {Query} from '@nestjs/common/decorators'
 @ApiTags('vehicles')
 @Controller('vehicles')
 @ApiBearerAuth()
@@ -25,16 +25,23 @@ export class VehiclesController {
     return this.vehiclesService.create(createVehicleDto, req.user.id);
   }
 
-  @Get('')
   @ApiQuery({
-    name: "group",
-    type: String,
+    name: 'page',
+    type: Number,
     required: false,
-    description: "Informe vehicles, trazer um item agrupado"
+    description: 'The page number (starts from 0)',
   })
-  findAll(@Request() req) {
-    return this.vehiclesService.findAll();
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    required: false,
+    description: 'The number of items per page (default to 12)',
+  })
+  @Get('')
+  findAll(@Query('page') page = 0, @Query('limit') limit = 12) {
+    return this.vehiclesService.findAll(page, limit);
   }
+  
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)

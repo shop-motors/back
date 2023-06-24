@@ -12,8 +12,8 @@ export class VehiclesService {
     return vehicle
   }
 
-  async findAll() {
-    const vehicle = await this.vehicleRepository.findAll()
+  async findAll(page: number, limit: number) {
+    const vehicle = await this.vehicleRepository.findAll(Number(page), Number(limit))
     return vehicle
   }
 
