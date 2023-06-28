@@ -5,21 +5,26 @@ import { Comment } from '../../entities/comment.entity';
 import { CommentsRepository } from '../comments.repository';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
-class CommentsPrismaRepository implements CommentsRepository{
+export class CommentsPrismaRepository implements CommentsRepository{
     private prisma = new PrismaClient();
 
    
-  async create(data: CreateCommentDto, userId: string, vehicleId: string): Promise<Comment> {
-    const comment = await this.prisma.comment.create({
-      data: {
-        content: data.content,
-        userId: userId,
-        vehicleId: vehicleId,
-      },
-    });
-
-    return comment;
-  }
+    async create(data: CreateCommentDto, userId: string, vehicleId: string): Promise<Comment> {
+        const comment = await this.prisma.comment.create({
+          data: {
+            content: data.content,
+            user: {
+              connect: { id: userId },
+            },
+            vehicle: {
+              connect: { id: vehicleId },
+            }
+          },
+        });
+    
+        return comment;
+      }
+    
 
     async findAll(): Promise<Comment[]> {
         const comments = await this.prisma.comment.findMany();

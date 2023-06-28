@@ -1,18 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, BadRequestException } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @Post()
+  @UseGuards(AuthGuard ('jwt'))
+  @Post('/:vehicleId')
   create(@Body() createCommentDto: CreateCommentDto, @Param('vehicleId') vehicleId: string, @Request() req) {
     const userId = req.user.id;
+    if (!vehicleId) {
+      throw new BadRequestException('vehicleId is required');
+    }
     return this.commentsService.create(createCommentDto, userId, vehicleId);
   }
-
   @Get()
   findAll() {
     return this.commentsService.findAll();
