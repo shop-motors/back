@@ -17,8 +17,16 @@ model User {
   birth_date String
   description String?
   vehicles Vehicles[]
+  comments Comment[]
 
   @@map("users")
+}
+
+enum FuelType {
+  gasolina
+  diesel
+  etanol
+  flex
 }
 
 model Vehicles{
@@ -27,6 +35,7 @@ model Vehicles{
   model String
   year String
   km String
+  fuel String
   color String
   fipe_price Int
   price Int
@@ -35,8 +44,22 @@ model Vehicles{
   userId String
   user User @relation(fields: [userId], references: [id])
   gallery Gallery[]
+  comments Comment[]
 
   @@map("vehicles")
+}
+
+model Comment {
+  id        String  @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  vehicleId String
+  user      User    @relation(fields: [userId], references: [id])
+  vehicle   Vehicles @relation(fields: [vehicleId], references: [id])
+  
+  @@map("comments")
 }
 
 model Gallery{

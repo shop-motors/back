@@ -4,7 +4,7 @@ import { PrismaService } from '../../../../database/prisma.services';
 import { GalleryRepository } from '../../../gallery/repositories/gallery.repository';
 import { CreateVehicleDto } from '../../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../../dto/update-vehicle.dto';
-import { Vehicle } from '../../entities/vehicle.entity';
+import { FuelType, Vehicle } from '../../entities/vehicle.entity';
 import { plainToInstance } from 'class-transformer';
 import { randomUUID } from 'crypto';
 
@@ -24,6 +24,7 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
         model: data.model,
         year: data.year,
         km: data.km,
+        fuel: FuelType[data.fuel],
         color: data.color,
         fipe_price: data.fipe_price,
         price: data.price,
@@ -175,6 +176,7 @@ const createdImages = imagesToCreate.length > 0
       model: data.model,
       year: data.year,
       km: data.km,
+      fuel: data.fuel,
       color: data.color,
       fipe_price: data.fipe_price,
       price: data.price,
@@ -187,12 +189,8 @@ const createdImages = imagesToCreate.length > 0
     },
   });
   
-
-
-  return updatedVehicle;
+  return plainToInstance(Vehicle, updatedVehicle);
 }
-
-
 
 async delete(id: string): Promise<void> {
   const vehicle = await this.prisma.vehicles.findUnique({
