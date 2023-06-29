@@ -22,12 +22,20 @@ model User {
   @@map("users")
 }
 
+enum FuelType {
+  gasolina
+  diesel
+  etanol
+  flex
+}
+
 model Vehicles{
   id String @id @default(uuid())
   brand String
   model String
   year String
   km String
+  fuel String
   color String
   fipe_price Int
   price Int

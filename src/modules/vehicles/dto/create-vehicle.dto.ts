@@ -7,6 +7,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { FuelType } from '../entities/vehicle.entity';
 
 
 export class VehicleBaseDto  {
@@ -34,6 +35,11 @@ export class VehicleBaseDto  {
   @MaxLength(7)
   km: string;
 
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(20)
+  fuel: FuelType
+  
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
