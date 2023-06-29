@@ -19,13 +19,13 @@ export class CommentsService {
     return this.commentsRepository.findOne(id);
   }
 
-  async update(id: string, updateCommentDto: UpdateCommentDto, userId: string, vehicleId: string) {
+  async update(id: string, updateCommentDto: UpdateCommentDto, userId: string) {
     const comment = await this.commentsRepository.findOne(id);
     if (comment.userId !== userId) {
       throw new ForbiddenException('You do not have permission to update this comment.');
     }
-    return this.commentsRepository.update(id, updateCommentDto);
-  }
+    return this.commentsRepository.update(id, updateCommentDto, userId); // include userId here
+}
 
   async remove(id: string, userId: string) {
     const comment = await this.commentsRepository.findOne(id);

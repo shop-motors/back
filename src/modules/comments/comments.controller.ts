@@ -17,23 +17,27 @@ export class CommentsController {
     }
     return this.commentsService.create(createCommentDto, userId, vehicleId);
   }
+
   @Get()
   findAll() {
     return this.commentsService.findAll();
   }
 
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.commentsService.findOne(id);
   }
 
+  @UseGuards(AuthGuard ('jwt'))
   @Patch(':id')
-  update(@Param('id') id: string, @Param('vehicleId') vehicleId: string, @Body() updateCommentDto: UpdateCommentDto, @Request() req) {
-    const userId = req.user.id;
-    return this.commentsService.update(id, updateCommentDto, userId, vehicleId);
+  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto, @Request() req) {
+      const userId = req.user.id;
+      return this.commentsService.update(id, updateCommentDto, userId);
   }
   
-
+  
+  @UseGuards(AuthGuard ('jwt'))
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {
     const userId = req.user.id;
