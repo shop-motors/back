@@ -8,6 +8,8 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserInMemoryRepository implements UsersRepository {
+  
+  
   private database: User[] = [];
   create(data: CreateUserDto): User | Promise<User> {
     const newUser = new User();
@@ -30,6 +32,11 @@ export class UserInMemoryRepository implements UsersRepository {
     const user = this.database.find((user) => user.email == email);
     return plainToInstance(User, user);
   }
+
+  findByToken(email: string): User | Promise<User> {
+    throw new Error('Method not implemented.');
+  }
+  
   update(id: string, data: UpdateUserDto): User | Promise<User> {
     const userIndex = this.database.findIndex(user => user.id == id);
     this.database[userIndex] = {
@@ -41,5 +48,12 @@ export class UserInMemoryRepository implements UsersRepository {
   delete(id: string): void | Promise<void> {
     const userIndex = this.database.findIndex(user => user.id == id);
     this.database.splice(userIndex, 1)
+  }
+
+  updatePassword(id: string, password: string): void | Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  updateToken(email: string, resetToken: string): void | Promise<void> {
+    throw new Error('Method not implemented.');
   }
 }

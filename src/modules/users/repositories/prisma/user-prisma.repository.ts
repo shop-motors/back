@@ -6,10 +6,14 @@ import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../entities/user.entity';
 import { PrismaService } from 'src/database/prisma.services';
 import { plainToInstance } from 'class-transformer';
+import { hashSync } from 'bcryptjs';
 
 @Injectable()
 export class UsersPrismaRepository implements UsersRepository {
   constructor(private prisma: PrismaService) {}
+  
+  
+
   async create(data: CreateUserDto): Promise<User> {
     const user = new User();
     Object.assign(user, {
@@ -36,16 +40,42 @@ export class UsersPrismaRepository implements UsersRepository {
     });
     return user;
   }
+
+  async findByToken(token: string): Promise<User> {
+    const user = await this.prisma.user.findFirst({
+      where: {reset_token: token },
+    });
+    return user;
+  }
+
   async update(id: string, data: UpdateUserDto): Promise<User> {
     const user = await this.prisma.user.update({
       where: { id },
-      data: { ...data }
+      data: { ...data },
     });
     return plainToInstance(User, user);
   }
   async delete(id: string): Promise<void> {
     await this.prisma.user.delete({
-        where: {id}
+      where: { id },
+    });
+  }
+
+  async updateToken(email: string, resetToken: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { email },
+      data: { reset_token: resetToken },
+    });
+  }
+
+  async updatePassword(id: string, password: string): Promise<void> {
+    await this.prisma.user.update({
+      where: {id},
+      data: {
+        password: hashSync(password, 10),
+        reset_token: null
+      }
+
     })
   }
 }
