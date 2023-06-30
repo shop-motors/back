@@ -7,9 +7,10 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { Url } from 'url';
+import { FuelType } from '../entities/vehicle.entity';
 
-export class CreateVehicleDto {
+
+export class VehicleBaseDto  {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -34,6 +35,11 @@ export class CreateVehicleDto {
   @MaxLength(7)
   km: string;
 
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(20)
+  fuel: FuelType
+  
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -59,11 +65,15 @@ export class CreateVehicleDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  cover_img: Url;
+  cover_img: string;
 
   @ApiProperty()
   @IsArray()
   @IsString({ each: true })
   @IsNotEmpty()
   galleryImages: string[];
+}
+
+export class CreateVehicleDto extends VehicleBaseDto {
+ 
 }

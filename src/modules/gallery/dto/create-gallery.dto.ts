@@ -1,8 +1,11 @@
-/* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateGalleryDto {
-  @IsString()
   @IsNotEmpty()
   img_url: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  vehicleId: string;
 }
+

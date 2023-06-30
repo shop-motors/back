@@ -1,18 +1,21 @@
-/* eslint-disable prettier/prettier */
+import { GalleryPrismaRepository } from './repositories/prisma/gallery.prisma.repository';
 import { Module } from '@nestjs/common';
 import { GalleryService } from './gallery.service';
 import { GalleryController } from './gallery.controller';
 import { GalleryRepository } from './repositories/gallery.repository';
-import { GalleryInMemoryRepository } from './repositories/in-memory/gallery.in-memory.repository';
+import { PrismaService } from '../../database/prisma.services';
 
 @Module({
   controllers: [GalleryController],
-  providers: [GalleryService,
+  providers: [
+    GalleryService,
+    PrismaService,
     {
       provide: GalleryRepository,
-      useClass: GalleryInMemoryRepository,
-    }
+      useClass: GalleryPrismaRepository,
+    },
   ],
-  exports: [GalleryRepository]
+  exports: [GalleryRepository, GalleryService],
 })
 export class GalleryModule {}
+
