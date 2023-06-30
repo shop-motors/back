@@ -16,7 +16,7 @@ const mailGenerator = new Mailgen({
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendEmail({ to, subject }: SendEmailDto) {
+  async sendEmail({ to, subject, text }: SendEmailDto) {
     await this.mailerService
       .sendMail({
         to,
