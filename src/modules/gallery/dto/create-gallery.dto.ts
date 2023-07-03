@@ -4,10 +4,12 @@ import { IsNotEmpty, IsString, IsUUID } from "class-validator";
 
 export class CreateGalleryDto {
   @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   img_url: string;
 
   @IsNotEmpty()
+  @IsString()
   @IsUUID()
   vehicleId: string;
 }
