@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id  String @id
+  id  String @id 
   name String
   email String @unique
   password String
@@ -18,16 +18,25 @@ model User {
   birth_date String
   description String?
   vehicles Vehicles[]
+  comments Comment[]
 
   @@map("users")
 }
 
+enum FuelType {
+  gasolina
+  diesel
+  etanol
+  flex
+}
+
 model Vehicles{
-  id String @id
+  id String @id @default(uuid())
   brand String
   model String
   year String
   km String
+  fuel String
   color String
   fipe_price Int
   price Int
@@ -36,15 +45,29 @@ model Vehicles{
   userId String
   user User @relation(fields: [userId], references: [id])
   gallery Gallery[]
+  comments Comment[]
 
   @@map("vehicles")
+}
+
+model Comment {
+  id        String  @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  vehicleId String
+  user      User    @relation(fields: [userId], references: [id])
+  vehicle   Vehicles @relation(fields: [vehicleId], references: [id])
+  
+  @@map("comments")
 }
 
 model Gallery{
   id String @id
   image_url String
   vehicleId String
-  vehicle Vehicles @relation(fields: [vehicleId], references: [id])
+  vehicle Vehicles @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   @@map("gallery")
 }

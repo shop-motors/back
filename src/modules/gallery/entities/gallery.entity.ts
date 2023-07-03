@@ -1,12 +1,10 @@
-/* eslint-disable prettier/prettier */
-import { Url } from "url";
-import { randomUUID } from 'crypto';
-
 export class Gallery {
     readonly id: string;
-    img_url: Url
+    image_url: string; 
 
-    constructor(){
-        this.id = randomUUID()
+    constructor(id: string, image_url: string) {
+        this.id = id;
+        this.image_url = image_url;
     }
 }
+
