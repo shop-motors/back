@@ -9,18 +9,15 @@ export class CommentsPrismaRepository implements CommentsRepository {
   private prisma = new PrismaClient();
 
   async create(
-    data: CreateCommentDto,
-    userId: string,
-    vehicleId: string,
-  ): Promise<Comment> {
+    data: CreateCommentDto, userId: string, vehicleId: string ): Promise<Comment> {
     const vehicle = await this.prisma.vehicles.findUnique({
       where: { id: vehicleId },
     });
-
+  
     if (!vehicle) {
       throw new NotFoundException('Vehicle not found.');
     }
-
+  
     const prismaComment = await this.prisma.comment.create({
       data: {
         content: data.content,
@@ -32,36 +29,44 @@ export class CommentsPrismaRepository implements CommentsRepository {
         },
       },
     });
-
-    const comment = new Comment(userId, data.content);
+  
+    const comment = new Comment(prismaComment.userId, prismaComment.content, prismaComment.id);
     comment.createdAt = prismaComment.createdAt.toLocaleString();
-
+  
     return comment;
   }
-
+ 
   async findAll(): Promise<Comment[]> {
     const prismaComments = await this.prisma.comment.findMany();
-    return prismaComments.map((c) => {
-      const comment = new Comment(c.userId, c.content);
-      comment.createdAt = c.createdAt.toLocaleString();
-      comment.updatedAt = c.updatedAt ? c.updatedAt.toLocaleString() : null;
+    
+    return prismaComments.map(prismaComment => {
+      const comment = new Comment(prismaComment.userId, prismaComment.content, prismaComment.id);
+      comment.createdAt = prismaComment.createdAt.toLocaleString();
+      comment.updatedAt = prismaComment.updatedAt
+        ? prismaComment.updatedAt.toLocaleString()
+        : null;
+    
       return comment;
     });
   }
-
+  
+  
+ 
   async findOne(id: string): Promise<Comment> {
+    console.log(id)
+      
     const prismaComment = await this.prisma.comment.findUnique({
-      where: { id: id },
+      where: { id:id },
     });
-
-    if (!prismaComment) throw new Error('Comment not found');
-
-    const comment = new Comment(prismaComment.userId, prismaComment.content);
+    console.log(prismaComment)
+    if (!prismaComment){throw new NotFoundException('Comment not found')};
+  
+    const comment = new Comment(prismaComment.userId, prismaComment.content, prismaComment.id);
     comment.createdAt = prismaComment.createdAt.toLocaleString();
     comment.updatedAt = prismaComment.updatedAt
       ? prismaComment.updatedAt.toLocaleString()
       : null;
-
+  
     return comment;
   }
 
@@ -71,19 +76,19 @@ export class CommentsPrismaRepository implements CommentsRepository {
     userId: string,
   ): Promise<Comment> {
     const prismaComment = await this.prisma.comment.findUnique({
-      where: { id },
+      where: { id: id },
     });
-
+  
     if (!prismaComment) {
       throw new NotFoundException('Comment not found.');
     }
-
+  
     if (prismaComment.userId !== userId) {
       throw new ForbiddenException(
         'You do not have permission to update this comment.',
       );
     }
-
+  
     const updatedPrismaComment = await this.prisma.comment.update({
       where: { id },
       data: {
@@ -91,18 +96,21 @@ export class CommentsPrismaRepository implements CommentsRepository {
         updatedAt: new Date(),
       },
     });
-
+  
     const updatedComment = new Comment(
       updatedPrismaComment.userId,
       updatedPrismaComment.content,
+      updatedPrismaComment.id
     );
     updatedComment.createdAt = updatedPrismaComment.createdAt.toLocaleString();
     updatedComment.updatedAt = updatedPrismaComment.updatedAt.toLocaleString();
-
+  
     return updatedComment;
   }
+  
 
   async delete(id: string, userId: string): Promise<void> {
+    console.log(id);
     const comment = await this.prisma.comment.findUnique({
       where: { id },
     });
@@ -122,3 +130,5 @@ export class CommentsPrismaRepository implements CommentsRepository {
     });
   }
 }
+
+

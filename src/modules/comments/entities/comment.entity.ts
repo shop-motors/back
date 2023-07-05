@@ -4,14 +4,15 @@ export class Comment {
   readonly id: string;
   content: string;
   userId: string;
-  createdAt: string; // Add this
-  updatedAt: string | null; // Add this
+  createdAt: string | Date;
+  updatedAt: string | Date | null;
 
-  constructor(userId: string, content: string) {
-    this.id = randomUUID();
+  constructor(userId: string, content: string, id?: string) {
+    this.id = id || randomUUID();
     this.userId = userId;
     this.content = content;
     this.createdAt = new Date().toLocaleString();
     this.updatedAt = null;
   }
 }
+

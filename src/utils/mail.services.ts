@@ -33,8 +33,7 @@ export class MailService {
         );
       });
   }
-  //${userName
-
+  
   resetPasswordTemplate(
     userEmail: string,
     userName: string,
