@@ -58,7 +58,7 @@ model Comment {
   userId    String
   vehicleId String
   user      User    @relation(fields: [userId], references: [id])
-  vehicle   Vehicles @relation(fields: [vehicleId], references: [id])
+  vehicle   Vehicles @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   
   @@map("comments")
 }

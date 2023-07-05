@@ -46,6 +46,7 @@ export class VehiclesController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
+    console.log(`Controller com o id ${id}`)
     return this.vehiclesService.findOne(id);
   }
 

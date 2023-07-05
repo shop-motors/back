@@ -28,6 +28,7 @@ export class CommentsController {
   findOne(@Param('id') id: string) {
     return this.commentsService.findOne(id);
   }
+  
 
   @UseGuards(AuthGuard ('jwt'))
   @Patch(':id')

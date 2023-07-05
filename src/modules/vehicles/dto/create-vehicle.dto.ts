@@ -38,7 +38,7 @@ export class VehicleBaseDto  {
   @IsString()
   @IsNotEmpty()
   @MaxLength(20)
-  fuel: FuelType
+  fuel: string
   
   @ApiProperty()
   @IsString()

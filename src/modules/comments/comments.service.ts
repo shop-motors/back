@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentsRepository } from './repositories/comments.repository';
@@ -20,18 +20,11 @@ export class CommentsService {
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto, userId: string) {
-    const comment = await this.commentsRepository.findOne(id);
-    if (comment.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to update this comment.');
-    }
-    return this.commentsRepository.update(id, updateCommentDto, userId); // include userId here
-}
+    return this.commentsRepository.update(id, updateCommentDto, userId);
+  }
 
   async remove(id: string, userId: string) {
-    const comment = await this.commentsRepository.findOne(id);
-    if (comment.userId !== userId) {
-      throw new ForbiddenException('You do not have permission to delete this comment.');
-    }
-    return this.commentsRepository.delete(id, userId);
+    await this.commentsRepository.delete(id, userId);
   }
 }
+

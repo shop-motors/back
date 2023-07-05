@@ -24,7 +24,7 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
         model: data.model,
         year: data.year,
         km: data.km,
-        fuel: FuelType[data.fuel],
+        fuel: data.fuel,
         color: data.color,
         fipe_price: data.fipe_price,
         price: data.price,
