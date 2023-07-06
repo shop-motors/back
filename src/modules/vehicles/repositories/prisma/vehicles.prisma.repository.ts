@@ -96,6 +96,7 @@ export class PrismaVehiclesRepository implements VehiclesRepository {
           }
         },
         gallery: true,
+        comments: true
       },
     });
     return {
@@ -123,6 +124,7 @@ async findOne(id: string): Promise<Vehicle> {
         },
       },
       gallery: true,
+      comments: true
     },
   });
   if (!vehicle) {
