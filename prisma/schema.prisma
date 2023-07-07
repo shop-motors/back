@@ -17,6 +17,7 @@ model User {
   phone String
   birth_date String
   description String?
+  is_seller Boolean @default(false)
   vehicles Vehicles[]
   comments Comment[]
 
